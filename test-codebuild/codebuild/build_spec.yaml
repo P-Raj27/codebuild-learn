@@ -7,7 +7,7 @@ phases:
     commands:
       - cd scripts
       - node set-env-variables.js $BRANCH_NAME
-      - cd ../backend
+      - cd ./test-codebuild
       - sam build
   post_build:
     commands:
