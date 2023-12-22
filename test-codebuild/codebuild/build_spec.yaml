@@ -10,9 +10,4 @@ phases:
       - sam build
   post_build:
     commands:
-      - sam deploy \
-        --stack-name $STACK_NAME_PREFIX-$BRANCH_NAME \
-        --no-confirm-changeset \
-        --no-fail-on-empty-changeset \
-        --parameter-overrides Stage=$BRANCH_NAME \
-        --capabilities CAPABILITY_NAMED_IAM
+      - sam deploy

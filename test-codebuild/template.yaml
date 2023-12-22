@@ -14,7 +14,7 @@ Resources:
   PythonLambdaFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: hello-world/
+      CodeUri: hello_world/
       Handler: app.lambda_handler
       Runtime: python3.11
       Timeout: 30
@@ -75,7 +75,7 @@ Resources:
   MyCodeBuildProject:
     Type: AWS::CodeBuild::Project
     Properties:
-      Name: MyCodeBuildProject
+      Name: CodeBuildTest
       ServiceRole: !Ref CodeBuildServiceRole
       Artifacts:
         Type: NO_ARTIFACTS
@@ -94,7 +94,7 @@ Resources:
         Auth:
           Type: OAUTH
         Type: GITHUB
-        BuildSpec: ./codebuild/build_spec.yaml
+        BuildSpec: ./test-codebuild/codebuild/build_spec.yaml
         Location: https://github.com/P-Raj27/codebuild-learn.git
 
       # Triggers:
