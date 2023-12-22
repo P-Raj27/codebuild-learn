@@ -1,0 +1,125 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  multi-runtime-lambda
+
+  Sample SAM Template with Multiple Lambda Runtimes (Python and Node.js)
+
+Globals:
+  Function:
+    Timeout: 3
+    MemorySize: 128
+
+Resources:
+  PythonLambdaFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: hello-world/
+      Handler: app.lambda_handler
+      Runtime: python3.11
+      Timeout: 30
+      MemorySize: 512
+      Environment:
+        Variables:
+          OPENAI_API_KEY: "placeholder"
+      Events:
+        PythonApi:
+          Type: Api
+          Properties:
+            Path: /python
+            Method: post
+
+  NodeJsLambdaFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: hello-world-js/
+      Handler: app.handler
+      Runtime: nodejs16.x
+      Events:
+        NodeJsApi:
+          Type: Api
+          Properties:
+            Path: /nodejs
+            Method: get
+
+  ApplicationResourceGroup:
+    Type: AWS::ResourceGroups::Group
+    Properties:
+      Name:
+        Fn::Sub: ApplicationInsights-SAM-${AWS::StackName}
+      ResourceQuery:
+        Type: CLOUDFORMATION_STACK_1_0
+
+  ApplicationInsightsMonitoring:
+    Type: AWS::ApplicationInsights::Application
+    Properties:
+      ResourceGroupName:
+        Ref: ApplicationResourceGroup
+      AutoConfigurationEnabled: "true"
+
+  CodeBuildServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - codebuild.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AdministratorAccess
+
+  MyCodeBuildProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Name: MyCodeBuildProject
+      ServiceRole: !Ref CodeBuildServiceRole
+      Artifacts:
+        Type: NO_ARTIFACTS
+      Environment:
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/amazonlinux2-x86_64-standard:4.0
+        Type: LINUX_CONTAINER
+        EnvironmentVariables:
+          - Name: STAGE_PATH
+            Value: ${self:provider.stage}
+            Type: PLAINTEXT
+          - Name: NODE_OPTIONS
+            Value: --max_old_space_size=4096
+            Type: PLAINTEXT
+      Source:
+        Auth:
+          Type: OAUTH
+        Type: GITHUB
+        BuildSpec: ./codebuild/build_spec.yaml
+        Location: https://github.com/P-Raj27/codebuild-learn.git
+
+      # Triggers:
+      #   BuildType: BUILD
+      #   Webhook: true
+      #   FilterGroups:
+      #     - - Type: EVENT
+      #         Pattern: "PULL_REQUEST_MERGED"
+      #       - Type: BASE_REF
+      #         Pattern: !Sub "^refs/heads/${self:provider.stage}$"
+      # TimeoutInMinutes: 60
+
+Outputs:
+  PythonApi:
+    Description: API Gateway endpoint URL for Python Lambda function
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/python/"
+
+  NodeJsApi:
+    Description: API Gateway endpoint URL for Node.js Lambda function
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/nodejs/"
+
+  PythonLambdaFunctionArn:
+    Description: Python Lambda Function ARN
+    Value: !GetAtt PythonLambdaFunction.Arn
+
+  NodeJsLambdaFunctionArn:
+    Description: Node.js Lambda Function ARN
+    Value: !GetAtt NodeJsLambdaFunction.Arn
