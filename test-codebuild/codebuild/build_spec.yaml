@@ -11,4 +11,4 @@ phases:
       - sam build
   post_build:
     commands:
-      - sam deploy --test-codebuild
+      - sam deploy --stack-name test-codebuild
