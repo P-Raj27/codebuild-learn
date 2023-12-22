@@ -9,4 +9,4 @@ phases:
       - sam build
   post_build:
     commands:
-      - sam deploy --stack-name test-codebuild
+      - sam deploy --stack-name test-codebuild --no-confirm-changeset --no-fail-on-empty-changeset
