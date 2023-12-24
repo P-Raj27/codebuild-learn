@@ -15,9 +15,10 @@ phases:
       - npm install -g esbuild
       - yum update -y
       #- yum install -y python3 python3-pip
-      - runtime-versions:
-          python: 3.8
+
       - npm install -g esbuild
+    runtime-versions:
+      python: 3.10
   build:
     commands:
       - cd ./test-codebuild
