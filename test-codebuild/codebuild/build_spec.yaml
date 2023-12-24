@@ -19,6 +19,7 @@ phases:
   build:
     commands:
       - cd ./test-codebuild
+      - cat ./test-codebuild/hello_world/requirements.txt
       - sam build
   post_build:
     commands:
