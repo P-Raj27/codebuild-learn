@@ -18,7 +18,7 @@ phases:
 
       - npm install -g esbuild
     runtime-versions:
-      python: 3.10
+      python: 3.11
   build:
     commands:
       - cd ./test-codebuild
