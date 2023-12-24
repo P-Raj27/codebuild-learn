@@ -24,6 +24,13 @@ phases:
       - cd ./test-codebuild
       - cat ./hello_world/requirements.txt
       - sam build
+
+      - cd frontend
+      - echo "VITE_BASE_URL=$BACKEND_API_URL" >> .env
+      - echo "VITE_APP_REGION=$APP_REGION" >> .env
+      - echo "VITE_USER_POOL_ID=$USER_POOL_ID" >> .env
+      - echo "VITE_USER_POOL_CLIENT_ID=$USER_POOL_CLIENT_ID" >> .env
+      - echo "VITE_COGNITO_DOMAIN=$COGNITO_DOMAIN" >> .env
   post_build:
     commands:
       - sam deploy --stack-name test-codebuild --no-confirm-changeset --no-fail-on-empty-changeset

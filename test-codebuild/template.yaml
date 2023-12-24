@@ -97,15 +97,14 @@ Resources:
         BuildSpec: ./test-codebuild/codebuild/build_spec.yaml
         Location: https://github.com/P-Raj27/codebuild-learn.git
 
-      # Triggers:
-      #   BuildType: BUILD
-      #   Webhook: true
-      #   FilterGroups:
-      #     - - Type: EVENT
-      #         Pattern: "PULL_REQUEST_MERGED"
-      #       - Type: BASE_REF
-      #         Pattern: !Sub "^refs/heads/${self:provider.stage}$"
-      # TimeoutInMinutes: 60
+      Triggers:
+        Webhook: true
+        FilterGroups:
+          - - Type: EVENT
+              Pattern: PUSH
+            - Type: HEAD_REF
+              Pattern: ^refs/heads/main$
+      TimeoutInMinutes: 60
 
 Outputs:
   PythonApi:
