@@ -10,9 +10,9 @@ manifest_hash = "84f756365f373061a8f0414835760175"
 packagetype = "Zip"
 functions = ["NodeJsLambdaFunction"]
 
-[function_build_definitions.afe164b5-a192-4ae5-94f7-e9c6cea1ef85]
+[function_build_definitions.d36c6318-55be-4696-a9ef-d9080e7723bd]
 codeuri = "/Users/pratikraj/Desktop/codebuild-learn/codebuild-learn/test-codebuild/hello_world"
-runtime = "python3.9"
+runtime = "python3.11"
 architecture = "x86_64"
 handler = "app.lambda_handler"
 manifest_hash = "d303e5ac0171aa4ee12e5c363d3733ac"

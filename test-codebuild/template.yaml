@@ -98,6 +98,7 @@ Resources:
         Location: https://github.com/P-Raj27/codebuild-learn.git
 
       Triggers:
+        BuildType: BUILD
         Webhook: true
         FilterGroups:
           - - Type: EVENT
